@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <stddef.h>
@@ -7,15 +8,15 @@
 struct Node {
     const char *key;
     const void *value;
-    struct SymTableNode *next;
+    struct Node *next;
 
-}
+};
 
 struct SymTable{
     size_t length;
     struct Node *first;
 
-}
+};
 SymTable_T SymTable_new(void){
     SymTable_T oSymTable;
     oSymTable = (SymTable_T)malloc(sizeof(struct SymTable));
@@ -64,7 +65,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue){
 
     if (newNode == NULL || newNode->key == NULL)
         return 0;
-    strcpy(newNode->key,pcKey);
+    strcpy((char *)newNode->key,pcKey);
     newNode->value = pvValue;
     newNode->next = temp;
     oSymTable->first = newNode;
@@ -87,7 +88,7 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
         current = current->next;
     temp = current->value;
     current->value = pvValue;
-    return temp;
+    return (void *)temp;
 }
 
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
@@ -126,7 +127,9 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     current = oSymTable->first;
     prev = NULL;
 
-    while (current != NULL && strcmp((const char *)current->key,pcKey)==0){
+    while (current != NULL){
+        if(strcmp((const char *)current->key,pcKey) == 0)
+            break;
         prev = current;
         current = current->next;
     }
@@ -145,7 +148,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     free((void *)current->key);
     free(current);
     
-    return temp;
+    return (void *)temp;
 }
 
 void SymTable_map(SymTable_T oSymTable,
@@ -156,7 +159,7 @@ void SymTable_map(SymTable_T oSymTable,
         assert(oSymTable != NULL);
         current = oSymTable->first;
         while (current != NULL){
-            pfApply(current->key, current->value,(void *)pvExtra);
+            pfApply(current->key, (void *)current->value,(void *)pvExtra);
             current = current->next;
         }
 

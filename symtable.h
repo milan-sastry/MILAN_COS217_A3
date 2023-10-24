@@ -1,3 +1,9 @@
+#include <stddef.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <assert.h>
+
 typedef struct SymTable *SymTable_T;
   
 SymTable_T SymTable_new(void);
