@@ -5,22 +5,31 @@
 #include <stddef.h>
 #include "symtable.h"
 
+/*contains the specified bucket counts for expansion*/
 static const size_t auBucketCounts[] = {509, 1021, 2039, 4093, 8191, 16381, 32749, 65521};
 
+/* Represents a binding in the symbol table/
 struct Binding{
+    /*key of the binding that is a string */
     const char *key;
+    /*value of the binding that is a void pointer*/
     const void *value;
+    /*next binding in the bucket that the binding points to*/
     struct Binding *next;
 };
+
+/* Represents the symbol table */
 struct SymTable{
+    /*number of buckets in the symbol table*/
     size_t numOfBuckets;
+    /*number of bindings, from 0-8 corresponding with
+    auBucketCounts[]*/
     size_t numOfBindings;
     struct Binding **buckets;
 };
 
 /* Return a hash code for pcKey that is between 0 and uBucketCount-1,
    inclusive. */
-
 static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
 {
    const size_t HASH_MULTIPLIER = 65599;
@@ -87,9 +96,12 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue){
     assert(oSymTable != NULL);
     if (SymTable_contains(oSymTable, pcKey)) return 0;
     
+    /*handles expansion*/
     if (oSymTable->numOfBindings == auBucketCounts[oSymTable->numOfBuckets] && oSymTable->numOfBindings != auBucketCounts[7]){
         struct Binding **newBuckets;
         newBuckets = (struct Binding **)malloc(auBucketCounts[oSymTable->numOfBuckets + 1]* sizeof(struct Binding));
+
+        /*checks whether to proceed with expansion, if memory was succesfully allocated for expanded array*/
         if (newBuckets != NULL) {
             for (i = 0; i < auBucketCounts[oSymTable->numOfBuckets]+1; i++){
                 newBuckets[i] = NULL;
@@ -187,7 +199,6 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     struct Binding *prev;
     size_t hash;
     const void *temp;
-
     assert(oSymTable != NULL && pcKey != NULL);
 
     hash = SymTable_hash(pcKey,auBucketCounts[oSymTable->numOfBuckets]);
