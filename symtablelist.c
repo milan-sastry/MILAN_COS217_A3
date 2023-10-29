@@ -1,3 +1,7 @@
+/*--------------------------------------------------------------------*/
+/* symtablelist.c                                                     */
+/* Author: Milan Sastry                                               */
+/*--------------------------------------------------------------------*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -55,7 +59,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue){
     struct Node *newNode;
     struct Node *temp;
 
-    assert(oSymTable != NULL);
+    assert(oSymTable != NULL && pcKey != NULL && pvValue != NULL);
     if (SymTable_contains(oSymTable, pcKey))
         return 0;
 
@@ -78,7 +82,7 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
     const void *temp;
     struct Node *current;
 
-    assert(oSymTable != NULL);
+    assert(oSymTable != NULL && pcKey != NULL && pvValue != NULL);
 
     if (!SymTable_contains(oSymTable,pcKey))
         return NULL;
@@ -93,7 +97,7 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
 
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
     struct Node *current;
-    assert(oSymTable != NULL);
+    assert(oSymTable != NULL && pcKey != NULL);
     current = oSymTable->first;
 
     while (current != NULL){
@@ -106,7 +110,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
 
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey){
     struct Node *current;
-    assert(oSymTable != NULL);
+    assert(oSymTable != NULL && pcKey != NULL);
     current = oSymTable->first;
 
     while (current != NULL){
@@ -122,7 +126,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     struct Node *current;
     struct Node *prev;
     const void *temp;
-    assert(oSymTable != NULL);
+    assert(oSymTable != NULL && pcKey != NULL);
 
     current = oSymTable->first;
     prev = NULL;
@@ -156,7 +160,7 @@ void SymTable_map(SymTable_T oSymTable,
     const void *pvExtra){
         struct Node *current;
 
-        assert(oSymTable != NULL);
+        assert(oSymTable != NULL && pfApply != NULL && pvExtra != NULL);
         current = oSymTable->first;
         while (current != NULL){
             pfApply(current->key, (void *)current->value,(void *)pvExtra);

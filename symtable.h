@@ -1,12 +1,13 @@
+/*--------------------------------------------------------------------*/
+/* symtable.h                                                         */
+/* Author: Milan Sastry                                               */
+/*--------------------------------------------------------------------*/
 #include <stddef.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <assert.h>
 
+/**/
 typedef struct SymTable *SymTable_T;
   
-/*Creates an empty Symbol Table*/
+/*Creates and returns an empty Symbol Table*/
 SymTable_T SymTable_new(void);
 
 /*Frees all the memory associated with oSymTable*/
@@ -36,7 +37,8 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey);
 of binding. Returns NULL if pcKey is not in oSymTable*/
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey);
 
-/*Applies the function pfApply to all bindings in oSymTable*/
+/*Applies the function pfApply to all bindings in oSymTable, passes pvExtra as 
+an argument of pfApply*/
 void SymTable_map(SymTable_T oSymTable,
     void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
     const void *pvExtra);

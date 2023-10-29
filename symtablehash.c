@@ -1,3 +1,7 @@
+/*--------------------------------------------------------------------*/
+/* symtablehash.c                                                     */
+/* Author: Milan Sastry                                               */
+/*--------------------------------------------------------------------*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -8,12 +12,14 @@
 /*contains the specified bucket counts for expansion*/
 static const size_t auBucketCounts[] = {509, 1021, 2039, 4093, 8191, 16381, 32749, 65521};
 
-/* Represents a binding in the symbol table/
+/* Represents a binding in the symbol table*/
 struct Binding{
     /*key of the binding that is a string */
     const char *key;
+
     /*value of the binding that is a void pointer*/
     const void *value;
+    
     /*next binding in the bucket that the binding points to*/
     struct Binding *next;
 };
@@ -22,9 +28,11 @@ struct Binding{
 struct SymTable{
     /*number of buckets in the symbol table*/
     size_t numOfBuckets;
-    /*number of bindings, from 0-8 corresponding with
-    auBucketCounts[]*/
+
+    /*number of bindings, ranges from 0-8 corresponding with
+    index of auBucketCounts[]*/
     size_t numOfBindings;
+
     struct Binding **buckets;
 };
 
@@ -124,7 +132,6 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue){
             free(oSymTable->buckets);
             oSymTable->buckets = newBuckets;
             oSymTable->numOfBuckets++;
-            printf("Num of buckets is %lu!",auBucketCounts[oSymTable->numOfBuckets]);
         }
     }
 
