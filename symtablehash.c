@@ -33,6 +33,7 @@ struct SymTable{
     index of auBucketCounts[]*/
     size_t numOfBindings;
 
+    /*array of pointers to the first binding in each bucket*/
     struct Binding **buckets;
 };
 
