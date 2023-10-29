@@ -4,7 +4,7 @@
 /*--------------------------------------------------------------------*/
 #include <stddef.h>
 
-/**/
+/*creates an alias SymTable_T as a pointer to a SymTable object*/
 typedef struct SymTable *SymTable_T;
   
 /*Creates and returns an empty Symbol Table*/

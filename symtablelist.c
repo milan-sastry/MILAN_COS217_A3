@@ -9,17 +9,26 @@
 #include <stddef.h>
 #include "symtable.h"
 
+/*Defines a linked list node for a symbol table entry with a key, a value, and next node.*/
 struct Node {
+     /*key of the binding that is a string */
     const char *key;
+
+    /*value of the binding that is a void pointer*/
     const void *value;
+
+    /*next binding in the bucket that the binding points to*/
     struct Node *next;
 
 };
 
+/*Represents the symbol table*/
 struct SymTable{
+    /*Number of bindings in table*/
     size_t length;
-    struct Node *first;
 
+    /*First node in the linked list*/
+    struct Node *first;
 };
 SymTable_T SymTable_new(void){
     SymTable_T oSymTable;
