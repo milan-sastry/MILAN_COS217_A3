@@ -76,7 +76,10 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue){
     newNode = (struct Node*)malloc(sizeof(struct Node));
     if (newNode == NULL) return 0;
     newNode->key = (const char*)malloc(strlen(pcKey) + 1);
-    if (newNode->key == NULL) return 0;
+    if (newNode->key == NULL) {
+        free(newNode);
+        return 0;
+    }
 
     strcpy((char *)newNode->key,pcKey);
     newNode->value = pvValue;
@@ -172,7 +175,7 @@ void SymTable_map(SymTable_T oSymTable,
         assert(oSymTable != NULL && pfApply != NULL);
         current = oSymTable->first;
         while (current != NULL){
-            pfApply(current->key, (void *)current->value,(void *)pvExtra);
+            (*pfApply)(current->key, (void *)current->value,(void *)pvExtra);
             current = current->next;
         }
 

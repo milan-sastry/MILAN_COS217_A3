@@ -59,21 +59,20 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
 /*Expands the oSymTable by increasing bucket number to next value in iteration and rehashing 
 all keys.*/
 static void SymTable_expand(SymTable_T oSymTable){
-    
     struct Binding* current;
     struct Binding* next;
     size_t i;
     size_t hash;
-    struct Binding **newBuckets= (struct Binding **)malloc(auBucketCounts[oSymTable->numOfBuckets + 1]* sizeof(struct Binding));
+    struct Binding **newBuckets;
     
-
+    newBuckets = (struct Binding **)malloc(auBucketCounts[oSymTable->numOfBuckets + 1]* sizeof(struct Binding));
     /*checks whether to proceed with expansion, if memory was succesfully allocated for expanded array*/
-    if (newBuckets == NULL) return;
+    if (newBuckets == NULL)
+        return;
 
     /*initializes buckets to NULL*/
     for (i = 0; i < auBucketCounts[(oSymTable->numOfBuckets)+1]; i++){
         newBuckets[i] = NULL;
-
     }
     
     /*Re hashes all bindings and puts them into new array*/
@@ -131,7 +130,7 @@ void SymTable_free(SymTable_T oSymTable){
             }
         }
     }
-
+    free(oSymTable->buckets);
     free(oSymTable);
 }
 
@@ -155,7 +154,10 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue){
     newBinding = (struct Binding*)malloc(sizeof(struct Binding));
     if (newBinding == NULL) return 0;
     newBinding->key = (const char*)malloc(strlen(pcKey)+1);
-    if (newBinding->key == NULL) return 0;
+    if (newBinding->key == NULL) {
+        free(newBinding);
+        return 0;
+    }
     
     strcpy((char *)newBinding->key,pcKey);
     hash = SymTable_hash(pcKey,auBucketCounts[oSymTable->numOfBuckets]);
@@ -257,7 +259,7 @@ void SymTable_map(SymTable_T oSymTable,
         for (i = 0; i < auBucketCounts[oSymTable->numOfBuckets]; i++){
             current = oSymTable->buckets[i];
             while (current != NULL){
-                pfApply(current->key, (void *)current->value,(void *)pvExtra);
+                (*pfApply)(current->key, (void *)current->value,(void *)pvExtra);
                 current = current->next;
             }
         }
