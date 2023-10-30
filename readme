@@ -12,6 +12,11 @@ in the "Policies" web page (also available on armlab in the file
 ~cos217/AuthorizedSourcesList ) to this section of the readme file,
 and edit it as appropriate.
 
+The course's lectures.
+
+The course's precepts.
+
+The course's website.
 
 
 ------------------------------------------------------------------------
@@ -46,7 +51,7 @@ disagreements with them? Copy the splint warnings here, and express your
 disagreement after each warning. If there are no warnings, then write
 "None."
 
-
+None
 
 ------------------------------------------------------------------------
 What warnings does critTer generate on symtablelist.c, and what are your
@@ -54,7 +59,18 @@ disagreements with them? Copy the critTer warnings here, and express
 your disagreement after each warning. If there are no warnings, then
 write "None."
 
+ symtablelist.c: line 67: medium priority:
+   Do you want to validate 'pvValue' through an assert?
 
+   symtablelist.c: line 90: medium priority:
+   Do you want to validate 'pvValue' through an assert?
+
+   symtablelist.c: line 169: medium priority:
+   Do you want to validate 'pvExtra' through an assert?
+
+   When I tried to use an assert statement to validate these parameters,
+   I got an error saying the assertion failed, and the test was aborted.
+   Thus, I decided not to assert that these void pointers were not NULL.
 
 ------------------------------------------------------------------------
 What warnings does splint generate on symtablehash.c, and what are your
@@ -70,7 +86,18 @@ disagreements with them? Copy the critTer warnings here, and express
 your disagreement after each warning. If there are no warnings, then
 write "None."
 
+   symtablehash.c: line 143: medium priority:
+   Do you want to validate 'pvValue' through an assert?
 
+   symtablehash.c: line 171: medium priority:
+   Do you want to validate 'pvValue' through an assert?
+
+   symtablehash.c: line 252: medium priority:
+   Do you want to validate 'pvExtra' through an assert?
+
+   When I tried to use an assert statement to validate these parameters,
+   I got an error saying the assertion failed, and the test was aborted.
+   Thus, I decided not to assert that these void pointers were not NULL.
 
 ------------------------------------------------------------------------
 What are the CPU times reported by testsymtable.c with binding counts
@@ -79,22 +106,22 @@ implementation, (2) your non-expanding hash table implementation, and
 (3) your expanding hash table implementation? Fill in the blanks.
 
 The linked list implementation with:
--- 50 bindings consumed ________ seconds.
--- 500 bindings consumed ________ seconds.
--- 5000 bindings consumed ________ seconds.
--- 50000 bindings consumed ________ seconds.
--- 500000 bindings consumed ________ seconds.
+-- 50 bindings consumed 0 seconds.
+-- 500 bindings consumed 0.006318 seconds.
+-- 5000 bindings consumed 1.092355 seconds.
+-- 50000 bindings consumed 109.507650 seconds.
+-- 500000 bindings consumed over 5 minutes.
 
 The non-expanding hash table implementation with:
--- 50 bindings consumed ________ seconds.
--- 500 bindings consumed ________ seconds.
--- 5000 bindings consumed ________ seconds.
--- 50000 bindings consumed ________ seconds.
--- 500000 bindings consumed ________ seconds.
+-- 50 bindings consumed 0 seconds.
+-- 500 bindings consumed 0 seconds.
+-- 5000 bindings consumed 0.013090 seconds.
+-- 50000 bindings consumed 0.433287 seconds.
+-- 500000 bindings consumed 80.763167 seconds.
 
 The expanding hash table implementation with:
--- 50 bindings consumed ________ seconds.
--- 500 bindings consumed ________ seconds.
--- 5000 bindings consumed ________ seconds.
--- 50000 bindings consumed ________ seconds.
--- 500000 bindings consumed ________ seconds.
+-- 50 bindings consumed 0 seconds.
+-- 500 bindings consumed 0 seconds.
+-- 5000 bindings consumed 0.008197 seconds.
+-- 50000 bindings consumed 0.142399 seconds.
+-- 500000 bindings consumed 1.779857 seconds.

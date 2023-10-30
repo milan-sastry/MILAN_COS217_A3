@@ -9,6 +9,9 @@
 #include <stddef.h>
 #include "symtable.h"
 
+/* global variable that has the value of 7 that is the index of the last bucket count*/
+static const size_t LAST_BUCKET_COUNT_INDEX = 7;
+
 /*contains the specified bucket counts for expansion*/
 static const size_t auBucketCounts[] = {509, 1021, 2039, 4093, 8191, 16381, 32749, 65521};
 
@@ -51,6 +54,47 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
       uHash = uHash * HASH_MULTIPLIER + (size_t)pcKey[u];
 
    return uHash % uBucketCount;
+}
+
+/*Expands the oSymTable by increasing bucket number to next value in iteration and rehashing 
+all keys.*/
+static void SymTable_expand(SymTable_T oSymTable){
+    
+    struct Binding* current;
+    struct Binding* next;
+    size_t i;
+    size_t hash;
+    struct Binding **newBuckets= (struct Binding **)malloc(auBucketCounts[oSymTable->numOfBuckets + 1]* sizeof(struct Binding));
+    
+
+    /*checks whether to proceed with expansion, if memory was succesfully allocated for expanded array*/
+    if (newBuckets == NULL) return;
+
+    /*initializes buckets to NULL*/
+    for (i = 0; i < auBucketCounts[(oSymTable->numOfBuckets)+1]; i++){
+        newBuckets[i] = NULL;
+
+    }
+    
+    /*Re hashes all bindings and puts them into new array*/
+    for (i = 0; i < auBucketCounts[oSymTable->numOfBuckets]; i++){
+        
+        current = oSymTable->buckets[i];
+        while (current != NULL){
+            struct Binding *temp;
+            hash = SymTable_hash(current->key,auBucketCounts[oSymTable->numOfBuckets + 1]);
+            temp = newBuckets[hash];
+            next = current->next;
+            current->next = temp;
+            newBuckets[hash] = current;
+            current = next;
+        }
+            
+    } 
+    free(oSymTable->buckets);
+    oSymTable->buckets = newBuckets;
+    oSymTable->numOfBuckets++;
+    
 }
 
 SymTable_T SymTable_new(void){
@@ -96,46 +140,18 @@ size_t SymTable_getLength(SymTable_T oSymTable){
     return (oSymTable->numOfBindings);
 }
 
-int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue){
-    struct Binding* newBinding;
-    struct Binding* current;
-    struct Binding* next;
+int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue){    
+    struct Binding *newBinding;
+    struct Binding *temp;
     size_t hash;
-    size_t i;
-    assert(oSymTable != NULL);
+    assert(oSymTable != NULL && pcKey != NULL);
     if (SymTable_contains(oSymTable, pcKey)) return 0;
     
     /*handles expansion*/
-    if (oSymTable->numOfBindings == auBucketCounts[oSymTable->numOfBuckets] && oSymTable->numOfBindings != auBucketCounts[7]){
-        struct Binding **newBuckets;
-        newBuckets = (struct Binding **)malloc(auBucketCounts[oSymTable->numOfBuckets + 1]* sizeof(struct Binding));
-
-        /*checks whether to proceed with expansion, if memory was succesfully allocated for expanded array*/
-        if (newBuckets != NULL) {
-            for (i = 0; i < auBucketCounts[oSymTable->numOfBuckets]+1; i++){
-                newBuckets[i] = NULL;
-            }
-            for (i = 0; i < auBucketCounts[oSymTable->numOfBuckets]; i++){
-                current = oSymTable->buckets[i];
-                while (current != NULL){
-                    next = current->next;
-                    hash = SymTable_hash(current->key,auBucketCounts[oSymTable->numOfBuckets + 1]);
-                    if (newBuckets[hash] != NULL){
-                        struct Binding *temp = newBuckets[hash];
-                        current->next = temp;
-                    }
-                    else
-                        current->next = NULL;
-                    newBuckets[hash] = current;
-                    current = next;
-                }
-            } 
-            free(oSymTable->buckets);
-            oSymTable->buckets = newBuckets;
-            oSymTable->numOfBuckets++;
-        }
+    if (oSymTable->numOfBindings == auBucketCounts[oSymTable->numOfBuckets] && oSymTable->numOfBindings != auBucketCounts[LAST_BUCKET_COUNT_INDEX]){
+        SymTable_expand(oSymTable);
     }
-
+    
     newBinding = (struct Binding*)malloc(sizeof(struct Binding));
     if (newBinding == NULL) return 0;
     newBinding->key = (const char*)malloc(strlen(pcKey)+1);
@@ -143,11 +159,9 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue){
     
     strcpy((char *)newBinding->key,pcKey);
     hash = SymTable_hash(pcKey,auBucketCounts[oSymTable->numOfBuckets]);
-    if (oSymTable->buckets[hash] == NULL) newBinding->next = NULL; 
-    else{
-        struct Binding *temp = oSymTable->buckets[hash];
-        newBinding->next = temp;
-    }  
+
+    temp = oSymTable->buckets[hash];
+    newBinding->next = temp;
     newBinding->value = pvValue;
     oSymTable->buckets[hash] = newBinding;
     oSymTable->numOfBindings++;
@@ -238,7 +252,7 @@ void SymTable_map(SymTable_T oSymTable,
     const void *pvExtra){
         struct Binding *current;
         size_t i;
-        assert(oSymTable != NULL);
+        assert(oSymTable != NULL && pfApply != NULL);
 
         for (i = 0; i < auBucketCounts[oSymTable->numOfBuckets]; i++){
             current = oSymTable->buckets[i];

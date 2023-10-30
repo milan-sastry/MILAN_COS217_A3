@@ -68,7 +68,7 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue){
     struct Node *newNode;
     struct Node *temp;
 
-    assert(oSymTable != NULL && pcKey != NULL && pvValue != NULL);
+    assert(oSymTable != NULL && pcKey != NULL);
     if (SymTable_contains(oSymTable, pcKey))
         return 0;
 
@@ -91,7 +91,7 @@ void *SymTable_replace(SymTable_T oSymTable, const char *pcKey, const void *pvVa
     const void *temp;
     struct Node *current;
 
-    assert(oSymTable != NULL && pcKey != NULL && pvValue != NULL);
+    assert(oSymTable != NULL && pcKey != NULL);
 
     if (!SymTable_contains(oSymTable,pcKey))
         return NULL;
@@ -169,7 +169,7 @@ void SymTable_map(SymTable_T oSymTable,
     const void *pvExtra){
         struct Node *current;
 
-        assert(oSymTable != NULL && pfApply != NULL && pvExtra != NULL);
+        assert(oSymTable != NULL && pfApply != NULL);
         current = oSymTable->first;
         while (current != NULL){
             pfApply(current->key, (void *)current->value,(void *)pvExtra);
