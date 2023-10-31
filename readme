@@ -123,7 +123,3 @@ The expanding hash table implementation with:
 -- 5000 bindings consumed 0.008197 seconds.
 -- 50000 bindings consumed 0.142399 seconds.
 -- 500000 bindings consumed 1.779857 seconds.
-
-
-
-
