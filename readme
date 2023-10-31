@@ -68,9 +68,8 @@ write "None."
    symtablelist.c: line 169: medium priority:
    Do you want to validate 'pvExtra' through an assert?
 
-   When I tried to use an assert statement to validate these parameters,
-   I got an error saying the assertion failed, and the test was aborted.
-   Thus, I decided not to assert that these void pointers were not NULL.
+   These are all void pointers, and you do not need to assert that they are not
+   NULL because they are not being dereferenced.
 
 ------------------------------------------------------------------------
 What warnings does splint generate on symtablehash.c, and what are your
@@ -95,9 +94,8 @@ write "None."
    symtablehash.c: line 252: medium priority:
    Do you want to validate 'pvExtra' through an assert?
 
-   When I tried to use an assert statement to validate these parameters,
-   I got an error saying the assertion failed, and the test was aborted.
-   Thus, I decided not to assert that these void pointers were not NULL.
+   These are all void pointers, and you do not need to assert that they are not
+   NULL because they are not being dereferenced.
 
 ------------------------------------------------------------------------
 What are the CPU times reported by testsymtable.c with binding counts
@@ -125,3 +123,7 @@ The expanding hash table implementation with:
 -- 5000 bindings consumed 0.008197 seconds.
 -- 50000 bindings consumed 0.142399 seconds.
 -- 500000 bindings consumed 1.779857 seconds.
+
+
+
+

@@ -2,14 +2,14 @@
 /* symtablehash.c                                                     */
 /* Author: Milan Sastry                                               */
 /*--------------------------------------------------------------------*/
-#include <stdio.h>
+
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <stddef.h>
 #include "symtable.h"
 
-/* global variable that has the value of 7 that is the index of the last bucket count*/
+/* global variable that is the index of the last bucket count*/
 static const size_t LAST_BUCKET_COUNT_INDEX = 7;
 
 /*contains the specified bucket counts for expansion*/
@@ -65,15 +65,10 @@ static void SymTable_expand(SymTable_T oSymTable){
     size_t hash;
     struct Binding **newBuckets;
     
-    newBuckets = (struct Binding **)malloc(auBucketCounts[oSymTable->numOfBuckets + 1]* sizeof(struct Binding));
+    newBuckets = (struct Binding **)calloc(auBucketCounts[oSymTable->numOfBuckets + 1],sizeof(struct Binding));
     /*checks whether to proceed with expansion, if memory was succesfully allocated for expanded array*/
     if (newBuckets == NULL)
         return;
-
-    /*initializes buckets to NULL*/
-    for (i = 0; i < auBucketCounts[(oSymTable->numOfBuckets)+1]; i++){
-        newBuckets[i] = NULL;
-    }
     
     /*Re hashes all bindings and puts them into new array*/
     for (i = 0; i < auBucketCounts[oSymTable->numOfBuckets]; i++){
@@ -88,7 +83,7 @@ static void SymTable_expand(SymTable_T oSymTable){
             newBuckets[hash] = current;
             current = next;
         }
-            
+
     } 
     free(oSymTable->buckets);
     oSymTable->buckets = newBuckets;

@@ -3,8 +3,10 @@
 /* Author: Milan Sastry                                               */
 /*--------------------------------------------------------------------*/
 #include <stddef.h>
-
-/*creates an alias SymTable_T as a pointer to a SymTable object*/
+ 
+ /*Creates an alias SymTable_T as an opaque pointer to a SymTable object. A symbol table is a 
+ data structure that stores key-value pairs, where each key is unique and maps to a single value.
+ This interface provides functions to create, manipulate, and destroy a symbol table.*/
 typedef struct SymTable *SymTable_T;
   
 /*Creates and returns an empty Symbol Table*/
